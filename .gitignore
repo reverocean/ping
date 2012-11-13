@@ -1,3 +1,2 @@
 .idea
-def.csv
-result.csv
+*.csv
