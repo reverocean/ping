@@ -6,19 +6,21 @@ end
 def ip (domain_name)
   ips = []
   domain_name.split("\;").each do |name|
-    ip_reg = /.*\((.*)\)/
-    ping_result = ping name
-    if ping_result.match(ip_reg)
-      ips << ping_result.scan(ip_reg)[0][0]
-      next
-    end
+    if name && name.gsub(" ", "")
+      ip_reg = /.*\((.*)\)/
+      ping_result = ping name
+      if ping_result.match(ip_reg)
+        ips << ping_result.scan(ip_reg)[0][0]
+        next
+      end
 
-    ping_result = ping "www.#{name}"
-    if ping_result.match(ip_reg)
-      ips << ping_result.scan(ip_reg)[0][0]
-      next
+      ping_result = ping "www.#{name}"
+      if ping_result.match(ip_reg)
+        ips << ping_result.scan(ip_reg)[0][0]
+        next
+      end
+      ips << "can't ping"
     end
-    ips << "can't ping"
   end
   ips.join(";") + ";"
 end
@@ -43,7 +45,7 @@ File.open('result.csv', 'w') do |f2|
       if l.match /(.*;);(.*)/
         domains = l.scan(/(.*;);(.*)/)[0]
         domains[2] = ping_r(domains[1], ip(domains[0]))
-        f2.puts "\"#{domains.join("\";")};\""
+        f2.puts "\"#{domains.join("\";\"")}\""
       end
     end
   end
