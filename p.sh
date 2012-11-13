@@ -1,0 +1,1 @@
+ruby ping.rb $1
